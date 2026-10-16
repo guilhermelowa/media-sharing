@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "media-sharing"
+version = "0.1.0"
+description = "Watch a folder of media files and automatically publish them to multiple social networks through pluggable backends."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "pydantic>=2.6",
+    "PyYAML>=6.0",
+    "watchdog>=4.0",
+    "requests>=2.31",
+    "typer>=0.12",
+]
+
+[project.optional-dependencies]
+bluesky = ["atproto>=0.0.55"]
+x = ["requests-oauthlib>=2.0"]
+playwright = ["playwright>=1.44"]
+session_import = ["browser_cookie3>=0.19"]
+all = ["atproto>=0.0.55", "requests-oauthlib>=2.0", "playwright>=1.44", "browser_cookie3>=0.19"]
+dev = ["pytest>=8.0", "ruff>=0.5"]
+
+[project.scripts]
+media-sharing = "media_sharing.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/media_sharing"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

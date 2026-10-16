@@ -1,0 +1,40 @@
+# Per-platform configuration: the ordered list of backends to try (the pipeline
+# falls through to the next on a non-retryable failure or an unimplemented one),
+# plus rate-limit hints enforced by the state store.
+#
+# Backend names must exist in src/media_sharing/backends/registry.py.
+
+platforms:
+  bluesky:
+    backends: [bluesky_api]
+    daily_cap: null
+    min_interval_seconds: 0
+
+  x:
+    # Browser automation by default (no API cost). To use the paid API instead,
+    # pin account.backend: x_api (or change this chain).
+    backends: [x_playwright]
+    daily_cap: 50
+    min_interval_seconds: 0
+
+  tiktok:
+    # Browser session by default (no developer app / audit needed for your own
+    # feed). Falls back to the API if a session isn't set up, then to the Android
+    # app via ADB + Maestro. To force the API, pin account.backend: tiktok_api.
+    backends: [tiktok_playwright, tiktok_api, tiktok_mobile]
+    daily_cap: 15
+    min_interval_seconds: 10
+
+  kwai:
+    # No official API and no usable web upload flow. Drives the Android app on a
+    # USB-connected phone via ADB + Maestro. (Aggregators do not support Kwai.)
+    backends: [kwai_mobile]
+    daily_cap: 5
+    min_interval_seconds: 60
+
+  instagram:
+    # Official API needs a public URL + Business account + app review; drive the
+    # Android app instead (ADB + Maestro). See docs/mobile.md.
+    backends: [instagram_mobile]
+    daily_cap: 25
+    min_interval_seconds: 30

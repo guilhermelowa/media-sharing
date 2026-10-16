@@ -1,0 +1,82 @@
+# Accounts owned by the operator. Multiple accounts per platform are supported.
+#
+# `name` is an arbitrary LOCAL label for your own bookkeeping — it is NOT a
+# platform concept (there is no "brand" in Kwai/TikTok/X). It only needs to match
+# a folder under media/inbox/<name>/ and the session filename. Rename freely.
+#
+# Credentials are referenced by environment-variable name (env:NAME) so secrets
+# never live in this file. See .env.example.
+#
+# account backend: leave null to use the fallback chain from platforms.yaml,
+# or pin a specific backend (e.g. "aggregator") for that account.
+
+accounts:
+  # --- Bluesky -------------------------------------------------------------
+  - name: my_bsky
+    platform: bluesky
+    backend: null
+    enabled: false
+    credentials:
+      handle: env:BLUESKY_HANDLE
+      app_password: env:BLUESKY_APP_PASSWORD
+
+  # --- X / Twitter ---------------------------------------------------------
+  # Uses Playwright (browser session) by default — no API credentials needed.
+  # Auth once with:  media-sharing login x my_x
+  # To use the paid API instead, pin backend: x_api and fill the credentials.
+  - name: my_x
+    platform: x
+    backend: null
+    enabled: false
+    options:
+      headless: true
+    credentials: {}
+
+  # --- TikTok --------------------------------------------------------------
+  # Session is imported from a real browser (no login-form automation, which
+  # platforms aggressively bot-detect). Log in to TikTok in Firefox, then run:
+  #   media-sharing import-session tiktok my_tiktok --browser firefox --verify
+  # To use the official API instead, pin backend: tiktok_api and set the tokens.
+  - name: my_tiktok
+    platform: tiktok
+    backend: null
+    enabled: false
+    options:
+      headless: true
+    credentials: {}
+
+  # --- Kwai (Android app via ADB + Maestro) --------------------------------
+  # Kwai has no usable web upload flow, so it drives the official app on a
+  # shared USB-connected phone. No login/session file is stored; the app stays
+  # logged in. Calibrate the flow:  media-sharing inspect <account>
+  # then:  maestro studio   (see config/mobile/kwai.yaml)
+  - name: my_kwai
+    platform: kwai
+    backend: null
+    enabled: false
+    options:
+      app_id: com.kwai.video
+      # flow: config/mobile/kwai.yaml   # default for this backend
+      # device: <adb-serial>            # only if not using the shared phone
+      # media_dir: /sdcard/Download/media_sharing
+      # expected_handle: my_handle
+      # Verification mode: the flow stages the post but does not tap Publicar;
+      # the run reports `manual_required` instead of `published`.
+      manual_publish: true
+    credentials: {}
+
+  # --- Instagram (Android app via ADB + Maestro) ---------------------------
+  # The API path requires a public URL + Business account + app review; this
+  # drives the real app instead. Add the account to the shared phone and log in.
+  #   media-sharing mobile-setup my_instagram
+  - name: my_instagram
+    platform: instagram
+    backend: null
+    enabled: false
+    options:
+      app_id: com.instagram.android
+      # flow: config/mobile/instagram.yaml
+      # device: <adb-serial>
+      # media_dir: /sdcard/Download/media_sharing
+      # expected_handle: my_handle
+    credentials: {}

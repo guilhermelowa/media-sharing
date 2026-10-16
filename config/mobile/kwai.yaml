@@ -1,0 +1,42 @@
+# Maestro flow: publish one media file to Kwai via the Android app.
+#
+# Calibrated against Kwai (com.kwai.video), pt-BR locale, 2026-10.
+# The backend pushes the file first; in the **Vídeos** tab videos are listed
+# newest-first, so the staged clip is the FIRST video tile. The default "Todos"
+# tab mixes photos and videos, so we must switch to "Vídeos" explicitly.
+# Variables:
+#   ${CAPTION}     resolved caption text
+#   ${MEDIA}       staged filename (e.g. clip.mp4)
+#   ${MEDIA_PATH}  full on-device path (e.g. /sdcard/Download/media_sharing/clip.mp4)
+appId: com.kwai.video
+---
+- stopApp
+- launchApp:
+    clearState: false
+- extendedWaitUntil:                                   # wait for home feed to load
+    visible:
+      id: "com.kwai.video.basis:id/id_record_layout"
+    timeout: 30000
+- tapOn:
+    id: "com.kwai.video.basis:id/id_record_layout"   # bottom-center "+" / create
+- extendedWaitUntil:
+    visible: "Vídeos"                                  # picker tabs loaded
+    timeout: 15000
+- tapOn: "Vídeos"                                    # videos-only tab (newest-first)
+- tapOn:
+    id: "com.kwai.video.basis:id/preview_container"   # [0] = newest video = staged file
+    index: 0
+- tapOn: "Próximo"                                    # editor -> publish screen
+- tapOn:
+    id: "com.kwai.video.basis:id/editor"              # caption field
+- inputText: "${CAPTION}"
+- hideKeyboard                                        # keyboard covers the action bar
+#
+# VERIFICATION MODE: the final publish tap is disabled so the operator can
+# confirm the correct media/caption on screen and press "Publicar" manually.
+# Re-enable the two steps below once verified:
+#
+# - tapOn:
+#     id: "com.kwai.video.ca_product:id/post_label"   # "Publicar"
+# - assertVisible:
+#     id: "com.kwai.video.basis:id/id_record_layout"  # back on home feed

@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# Secrets & local state
+.env
+state/*.db
+state/*.db-*
+state/*.lock
+src/media_sharing/sessions/*
+!src/media_sharing/sessions/.gitkeep
+debug/
+debug/mobile/
+
+# Local media (keep only the directory markers)
+media/inbox/*
+media/processed/*
+media/failed/*
+!media/inbox/.gitkeep
+!media/processed/.gitkeep
+!media/failed/.gitkeep
+
+# Local test media
+/clip.mp4
+/clip.mp4.json
+
+# OS
+.DS_Store

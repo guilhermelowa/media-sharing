@@ -1,0 +1,22 @@
+# Maestro flow: publish one media file to TikTok via the Android app.
+#
+# Last fallback after tiktok_playwright / tiktok_api. Selectors below are
+# PLACEHOLDERS and WILL need calibrating. Run `media-sharing inspect <account>`
+# then `maestro studio` to find the real labels. Variables:
+#   ${CAPTION}     resolved caption text
+#   ${MEDIA}       staged filename (e.g. clip.mp4)
+#   ${MEDIA_PATH}  full on-device path
+appId: com.zhiliaoapp.musically
+---
+- launchApp:
+    clearState: false
+- tapOn: "+"                   # TODO: create button
+- tapOn: "Upload"              # TODO: Upload entry
+- tapOn: "Files"               # TODO: SAF "Files/Downloads" picker entry
+- tapOn: "${MEDIA}"            # TODO: the staged media, by filename
+- tapOn: "Next"
+- tapOn: "Next"
+- tapOn: "Add description…"    # TODO: caption field
+- inputText: "${CAPTION}"
+- tapOn: "Post"                # TODO: Post / Publish
+- assertVisible: ".*"          # TODO: confirmation

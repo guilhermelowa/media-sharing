@@ -1,0 +1,21 @@
+# Maestro flow: publish one media file to Instagram via the Android app.
+#
+# The only Instagram backend (the API path needs a public URL + Business account
+# + app review). Selectors below are PLACEHOLDERS and WILL need calibrating. Run
+# `media-sharing inspect <account>` then `maestro studio`. Variables:
+#   ${CAPTION}     resolved caption text
+#   ${MEDIA}       staged filename (e.g. clip.mp4)
+#   ${MEDIA_PATH}  full on-device path
+appId: com.instagram.android
+---
+- launchApp:
+    clearState: false
+- tapOn: "New post"            # TODO: create / plus
+- tapOn: "Files"               # TODO: SAF "Files/Downloads" picker entry
+- tapOn: "${MEDIA}"            # TODO: the staged media, by filename
+- tapOn: "Next"
+- tapOn: "Next"
+- tapOn: "Write a caption…"    # TODO: caption field
+- inputText: "${CAPTION}"
+- tapOn: "Share"               # TODO: Share / Publish
+- assertVisible: ".*"          # TODO: confirmation
